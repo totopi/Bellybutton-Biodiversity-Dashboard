@@ -37,6 +37,10 @@ function optionChanged(route) {
             ([key, value]) => $metadata.append("div").text(`${key}: ${value}`)
         );
     });
+    d3.json(`/wfreq/${route}`, function(error, data) {
+        if (error) return console.warn(error);
+        bonus(data);
+    })
 }
 
 function updatePlotly(newdata) {
@@ -109,9 +113,77 @@ Plotly.d3.json(defaultUrl, function(error, data) {
 defaultUrl = "/metadata/BB_940"
 d3.json(defaultUrl, function(error, data) {
     if (error) return console.warn(error);
-    console.log(data);
     let $metadata = d3.select("#metadata");
     Object.entries(data).forEach(
         ([key, value]) => $metadata.append("div").text(`${key}: ${value}`)
     );
 });
+
+// BONUS
+function bonus(freq) {
+    // Enter a speed between 0 and 180
+    freq2 = (freq-0.2)*20;
+    // Trig to calc meter point
+    let degrees = 180 - freq2,
+        radius = .5;
+    let radians = degrees * Math.PI / 180;
+    let x = radius * Math.cos(radians);
+    let y = radius * Math.sin(radians);
+
+    // Path: may have to change to create a better triangle
+    let mainPath = 'M -.0 -0.025 L .0 0.025 L ',
+        pathX = String(x),
+        space = ' ',
+        pathY = String(y),
+        pathEnd = ' Z';
+    let path = mainPath.concat(pathX,space,pathY,pathEnd);
+
+    let data = [{ type: 'scatter',
+    x: [0], y:[0],
+        marker: {size: 28, color:'850000'},
+        showlegend: false,
+        name: 'scrubs per week',
+        text: freq,
+        hoverinfo: 'text+name'},
+    { values: [50/9, 50/9, 50/9, 50/9, 50/9, 50/9, 50/9, 50/9, 50/9, 50],
+    rotation: 90,
+    text: ['8-9', '7-8', '6-7', '5-6', '4-5', '3-4', '2-3', '1-2', '0-1', ''],
+    textinfo: 'text',
+    textposition:'inside',
+    marker: {colors:['rgba(14, 127, 0, .5)', 'rgba(110, 154, 22, .5)',
+                            'rgba(170, 202, 42, .5)', 'rgba(202, 209, 95, .5)',
+                            'rgba(210, 206, 145, .5)', 'rgba(232, 226, 202, .5)',
+                            'rgba(240, 240, 232, .5)', 'rgba(245, 245, 240, .5)',
+                            'rgba(250, 250, 250, .5',
+                            'rgba(255, 255, 255, 0)']},
+    labels: ['8-9', '7-8', '6-7', '5-6', '4-5', '3-4', '2-3', '1-2', '0-1', ''],
+    hoverinfo: 'label',
+    hole: .5,
+    type: 'pie',
+    showlegend: false
+    }];
+
+    let layout = {
+    shapes:[{
+        type: 'path',
+        path: path,
+        fillcolor: '850000',
+        line: {
+            color: '850000'
+        }
+        }],
+    title: 'Belly Button Washing Frequency Scrubs per Week',
+    height: 500,
+    width: 500,
+    xaxis: {zeroline:false, showticklabels:false,
+                showgrid: false, range: [-1, 1]},
+    yaxis: {zeroline:false, showticklabels:false,
+                showgrid: false, range: [-1, 1]}
+    };
+
+    Plotly.newPlot('freq', data, layout);
+}
+d3.json('/wfreq/BB_940', function(error, data) {
+    if (error) return console.warn(error);
+    bonus(data);
+})
