@@ -33,7 +33,9 @@ function optionChanged(route) {
         console.log(data);
         let $metadata = d3.select("#metadata");
         document.querySelector("#metadata").innerHTML = "";
-        $metadata.append("p").text(`AGE: ${data.AGE}`).append("p").text(`BBTYPE: ${data.BBTYPE}`).append("p").text(`ETHNICITY: ${data.ETHNICITY}`).append("p").text(`GENDER: ${data.GENDER}`).append("p").text(`LOCATION: ${data.LOCATION}`).append("p").text(`SAMPLEID: ${data.SAMPLEID}`);
+        Object.entries(data).forEach(
+            ([key, value]) => $metadata.append("div").text(`${key}: ${value}`)
+        );
     });
 }
 
@@ -103,10 +105,13 @@ Plotly.d3.json(defaultUrl, function(error, data) {
     let Bubble = document.querySelector("#bubble");
     Plotly.plot(Bubble, trace2, layout2);
 });
+
 defaultUrl = "/metadata/BB_940"
 d3.json(defaultUrl, function(error, data) {
     if (error) return console.warn(error);
     console.log(data);
     let $metadata = d3.select("#metadata");
-    $metadata.append("p").text(`AGE: ${data.AGE}`).append("p").text(`BBTYPE: ${data.BBTYPE}`).append("p").text(`ETHNICITY: ${data.ETHNICITY}`).append("p").text(`GENDER: ${data.GENDER}`).append("p").text(`LOCATION: ${data.LOCATION}`).append("p").text(`SAMPLEID: ${data.SAMPLEID}`);
+    Object.entries(data).forEach(
+        ([key, value]) => $metadata.append("div").text(`${key}: ${value}`)
+    );
 });
