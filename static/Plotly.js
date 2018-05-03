@@ -27,23 +27,31 @@ function optionChanged(route) {
     Plotly.d3.json(`/samples/${route}`, function(error, data) {
         if (error) return console.warn(error);
         updatePlotly(data);
-    })
+    });
+    d3.json(`/metadata/${route}`, function(error, data) {
+        if (error) return console.warn(error);
+        console.log(data);
+        let $metadata = d3.select("#metadata");
+        document.querySelector("#metadata").innerHTML = "";
+        $metadata.append("p").text(`AGE: ${data.AGE}`).append("p").text(`BBTYPE: ${data.BBTYPE}`).append("p").text(`ETHNICITY: ${data.ETHNICITY}`).append("p").text(`GENDER: ${data.GENDER}`).append("p").text(`LOCATION: ${data.LOCATION}`).append("p").text(`SAMPLEID: ${data.SAMPLEID}`);
+    });
 }
 
 function updatePlotly(newdata) {
     let Pie = document.querySelector("#pie");
     let sampleValues = newdata[0].sample_values.splice(0,10);
     let otuIds = newdata[0].otu_ids.splice(0,10);
-    let hoverText = []
+    let hoverText = [];
     for (let i = 0; i < 10; i++) {
         let search = otuIds[i];
         hoverText.push(otuList[0][search]);
     }
-    console.log(sampleValues);
-    console.log(otuIds);
     Plotly.restyle(Pie, "values", [sampleValues]);
     Plotly.restyle(Pie, "labels", [otuIds]);
     Plotly.restyle(Pie, "hovertext", [hoverText]);
+    let Bubble = document.querySelector("#bubble");
+    Plotly.restyle(Bubble, "x", [newdata[0].otu_ids]);
+    Plotly.restyle(Bubble, "y", [newdata[0].sample_values]);
 }
 
 // Plot the default route (BB_940) once the page loads
@@ -53,17 +61,52 @@ Plotly.d3.json(defaultUrl, function(error, data) {
     if (error) return console.warn(error);
     let sampleValues = data[0].sample_values.splice(0,10);
     let otuIds = data[0].otu_ids.splice(0,10);
-    let hoverText = []
+    let hoverText = [];
     for (let i = 0; i < 10; i++) {
         let search = otuIds[i];
         hoverText.push(otuList[0][search]);
-    };
-    let trace = [{
+    }
+    let trace1 = [{
         type: "pie",
         values: sampleValues,
         labels: otuIds,
         hovertext: hoverText
     }];
+    let layout = {
+        margin: {
+            t: 0
+        }
+    };
     let Pie = document.querySelector("#pie");
-    Plotly.plot(Pie, trace);
+    Plotly.plot(Pie, trace1, layout);
+
+    // and now for the bubble chart
+    //for (let i = 0, ii = otu)
+    let trace2 = [{
+        x: data[0].otu_ids,
+        y: data[0].sample_values,
+        mode: "markers",
+        marker: {
+            size: data[0].sample_values.map(num => {return num * 3}),
+            color: data[0].otu_ids
+        },
+        text: otuList[0],
+        type: "scatter"
+    }];
+    let layout2 = {
+        showlegend: false,
+        height: 500,
+        width: 1200,
+        margin: {t: 0},
+        xaxis: {title: "OTU IDs"}
+    }
+    let Bubble = document.querySelector("#bubble");
+    Plotly.plot(Bubble, trace2, layout2);
+});
+defaultUrl = "/metadata/BB_940"
+d3.json(defaultUrl, function(error, data) {
+    if (error) return console.warn(error);
+    console.log(data);
+    let $metadata = d3.select("#metadata");
+    $metadata.append("p").text(`AGE: ${data.AGE}`).append("p").text(`BBTYPE: ${data.BBTYPE}`).append("p").text(`ETHNICITY: ${data.ETHNICITY}`).append("p").text(`GENDER: ${data.GENDER}`).append("p").text(`LOCATION: ${data.LOCATION}`).append("p").text(`SAMPLEID: ${data.SAMPLEID}`);
 });
