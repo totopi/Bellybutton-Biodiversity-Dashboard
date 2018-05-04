@@ -1,5 +1,5 @@
 // Set up our otuList, where the index is the otu ID and the value in the list is the description
-let otuList = [];
+var otuList = [];
 Plotly.d3.json("/otu", function(error, data) {
     if (error) return console.warn(error);
     otuList.push(data);
