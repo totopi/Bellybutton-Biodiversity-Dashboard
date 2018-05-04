@@ -19,6 +19,7 @@ let otuList = [];
 Plotly.d3.json("/otu", function(error, data) {
     if (error) return console.warn(error);
     otuList.push(data);
+    onLoad(data[0]);
 });
 
 /*Create a function called optionChanged to handle the change event when a new sample is selected 
@@ -71,7 +72,7 @@ function onLoad(otuList) {
         let hoverText = [];
         for (let i = 0; i < 10; i++) {
             let search = otuIds[i];
-            hoverText.push(otuList[0][search]);
+            hoverText.push(otuList[search]);
         }
         let trace1 = [{
             type: "pie",
@@ -97,7 +98,7 @@ function onLoad(otuList) {
                 size: data[0].sample_values.map(num => {return num * 3}),
                 color: data[0].otu_ids
             },
-            text: otuList[0],
+            text: otuList,
             type: "scatter"
         }];
         let layout2 = {
@@ -188,4 +189,3 @@ d3.json('/wfreq/BB_940', function(error, data) {
     if (error) return console.warn(error);
     bonus(data);
 })
-setTimeout(onLoad(otuList), 3000);
