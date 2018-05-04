@@ -188,4 +188,4 @@ d3.json('/wfreq/BB_940', function(error, data) {
     if (error) return console.warn(error);
     bonus(data);
 })
-onLoad(otuList);
+setTimeout(onLoad(otuList), 3000);
