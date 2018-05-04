@@ -8,3 +8,4 @@ pandas==0.20.3
 pandocfilters==1.4.2
 PyMySQL==0.8.0
 SQLAlchemy==1.2.5
+gunicorn==19.7.1
