@@ -1,5 +1,5 @@
 // Set up our otuList, where the index is the otu ID and the value in the list is the description
-var otuList = [];
+let otuList = [];
 Plotly.d3.json("/otu", function(error, data) {
     if (error) return console.warn(error);
     otuList.push(data);
@@ -59,66 +59,66 @@ function updatePlotly(newdata) {
     Plotly.restyle(Bubble, "x", [newdata[0].otu_ids]);
     Plotly.restyle(Bubble, "y", [newdata[0].sample_values]);
 }
+function onLoad(otuList) {
+    // Plot the default route (BB_940) once the page loads
+    let defaultUrl = "/samples/BB_940";
 
-// Plot the default route (BB_940) once the page loads
-let defaultUrl = "/samples/BB_940";
-
-Plotly.d3.json(defaultUrl, function(error, data) {
-    if (error) return console.warn(error);
-    let sampleValues = data[0].sample_values.splice(0,10);
-    let otuIds = data[0].otu_ids.splice(0,10);
-    let hoverText = [];
-    for (let i = 0; i < 10; i++) {
-        let search = otuIds[i];
-        hoverText.push(otuList[0][search]);
-    }
-    let trace1 = [{
-        type: "pie",
-        values: sampleValues,
-        labels: otuIds,
-        hovertext: hoverText
-    }];
-    let layout = {
-        margin: {
-            t: 0
+    Plotly.d3.json(defaultUrl, function(error, data) {
+        if (error) return console.warn(error);
+        let sampleValues = data[0].sample_values.splice(0,10);
+        let otuIds = data[0].otu_ids.splice(0,10);
+        let hoverText = [];
+        for (let i = 0; i < 10; i++) {
+            let search = otuIds[i];
+            hoverText.push(otuList[0][search]);
         }
-    };
-    let Pie = document.querySelector("#pie");
-    Plotly.plot(Pie, trace1, layout);
+        let trace1 = [{
+            type: "pie",
+            values: sampleValues,
+            labels: otuIds,
+            hovertext: hoverText
+        }];
+        let layout = {
+            margin: {
+                t: 0
+            }
+        };
+        let Pie = document.querySelector("#pie");
+        Plotly.plot(Pie, trace1, layout);
 
-    // and now for the bubble chart
-    //for (let i = 0, ii = otu)
-    let trace2 = [{
-        x: data[0].otu_ids,
-        y: data[0].sample_values,
-        mode: "markers",
-        marker: {
-            size: data[0].sample_values.map(num => {return num * 3}),
-            color: data[0].otu_ids
-        },
-        text: otuList[0],
-        type: "scatter"
-    }];
-    let layout2 = {
-        showlegend: false,
-        height: 500,
-        width: 1200,
-        margin: {t: 0},
-        xaxis: {title: "OTU IDs"}
-    }
-    let Bubble = document.querySelector("#bubble");
-    Plotly.plot(Bubble, trace2, layout2);
-});
+        // and now for the bubble chart
+        //for (let i = 0, ii = otu)
+        let trace2 = [{
+            x: data[0].otu_ids,
+            y: data[0].sample_values,
+            mode: "markers",
+            marker: {
+                size: data[0].sample_values.map(num => {return num * 3}),
+                color: data[0].otu_ids
+            },
+            text: otuList[0],
+            type: "scatter"
+        }];
+        let layout2 = {
+            showlegend: false,
+            height: 500,
+            width: 1200,
+            margin: {t: 0},
+            xaxis: {title: "OTU IDs"}
+        }
+        let Bubble = document.querySelector("#bubble");
+        Plotly.plot(Bubble, trace2, layout2);
+    });
 
-defaultUrl = "/metadata/BB_940"
-d3.json(defaultUrl, function(error, data) {
-    if (error) return console.warn(error);
-    let $metadata = d3.select("#metadata");
-    Object.entries(data).forEach(
-        ([key, value]) => $metadata.append("div").text(`${key}: ${value}`)
-    );
-});
-
+    defaultUrl = "/metadata/BB_940"
+    d3.json(defaultUrl, function(error, data) {
+        if (error) return console.warn(error);
+        let $metadata = d3.select("#metadata");
+        Object.entries(data).forEach(
+            ([key, value]) => $metadata.append("div").text(`${key}: ${value}`)
+        );
+    });
+}
 // BONUS
 function bonus(freq) {
     // Enter a speed between 0 and 180
@@ -187,3 +187,4 @@ d3.json('/wfreq/BB_940', function(error, data) {
     if (error) return console.warn(error);
     bonus(data);
 })
+onLoad(otuList);
