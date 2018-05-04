@@ -1,9 +1,3 @@
-// Set up our otuList, where the index is the otu ID and the value in the list is the description
-let otuList = [];
-Plotly.d3.json("/otu", function(error, data) {
-    if (error) return console.warn(error);
-    otuList.push(data);
-});
 /*Use the route /names to populate a dropdown select element with the list of sample names.
 Use document.getElementById, document.createElement and append to populate the create option elements and append them to the dropdown selector.*/
 let optionSelect = document.querySelector("#selDataset");
@@ -18,6 +12,13 @@ d3.json("/names", function(error, response) {
         // Or just do it on one line, but following directions
         // let options = d3.select("#selDataset").append("option").attr("value", response[i]).text(response[i]);
     }
+});
+
+// Set up our otuList, where the index is the otu ID and the value in the list is the description
+let otuList = [];
+Plotly.d3.json("/otu", function(error, data) {
+    if (error) return console.warn(error);
+    otuList.push(data);
 });
 
 /*Create a function called optionChanged to handle the change event when a new sample is selected 
