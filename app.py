@@ -1,4 +1,4 @@
-import datetime as dt
+    import datetime as dt
 import numpy as np
 import pandas as pd
 
@@ -18,6 +18,10 @@ Samples_metadata = Base.classes.samples_metadata
 session = Session(engine)
 
 app = Flask(__name__)
+
+@app.before_first_request
+def setup():
+    pass
 
 @app.route("/")
 def welcome():
