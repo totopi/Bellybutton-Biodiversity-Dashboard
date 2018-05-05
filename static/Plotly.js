@@ -61,7 +61,7 @@ function updatePlotly(newdata) {
     Plotly.restyle(Bubble, "x", [newdata[0].otu_ids]);
     Plotly.restyle(Bubble, "y", [newdata[0].sample_values]);
 }
-function onLoad(otuList) {
+function onLoad(otus) {
     // Plot the default route (BB_940) once the page loads
     let defaultUrl = "/samples/BB_940";
 
@@ -72,7 +72,7 @@ function onLoad(otuList) {
         let hoverText = [];
         for (let i = 0; i < 10; i++) {
             let search = otuIds[i];
-            hoverText.push(otuList[search]);
+            hoverText.push(otus[search]);
         }
         let trace1 = [{
             type: "pie",
