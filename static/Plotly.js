@@ -16,10 +16,11 @@ d3.json("/names", function(error, response) {
 
 // Set up our otuList, where the index is the otu ID and the value in the list is the description
 let otuList = [];
-Plotly.d3.json("/otu", function(error, data) {
+d3.json("/otu", function(error, data) {
     if (error) return console.warn(error);
+    console.log(data);
     otuList.push(data);
-    onLoad(data[0]);
+    onLoad(data);
 });
 
 /*Create a function called optionChanged to handle the change event when a new sample is selected 
@@ -73,6 +74,7 @@ function onLoad(otus) {
         for (let i = 0; i < 10; i++) {
             let search = otuIds[i];
             hoverText.push(otus[search]);
+            console.log(hoverText);
         }
         let trace1 = [{
             type: "pie",
@@ -98,7 +100,7 @@ function onLoad(otus) {
                 size: data[0].sample_values.map(num => {return num * 3}),
                 color: data[0].otu_ids
             },
-            text: otuList,
+            text: otus,
             type: "scatter"
         }];
         let layout2 = {
