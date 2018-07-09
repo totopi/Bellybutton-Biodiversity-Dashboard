@@ -1,6 +1,6 @@
 # [Belly Button Biodiversity](https://bellybuttondashboardbleh.herokuapp.com/)
 
-![Bacteria by filterforge.com](Images/bacteria_by_filterforgedotcom.jpg)
+![screenshot](Images/screenshot.png)
 
 # Goal
 
