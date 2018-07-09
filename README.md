@@ -1,6 +1,6 @@
 # [Belly Button Biodiversity](https://bellybuttondashboardbleh.herokuapp.com/)
 
-![screenshot](Images/screenshot.png)
+![screenshot](Images/screenshot.PNG)
 
 # Goal
 
